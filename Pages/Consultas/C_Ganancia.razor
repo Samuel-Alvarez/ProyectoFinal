@@ -1,0 +1,50 @@
+@page "/Ganancias"
+@using Models
+@attribute [Authorize]
+@inject GananciaBLL gananciaBLL
+
+<EditForm Model="this">
+    <div class="card">
+
+        <div class="card-header">
+            <h4>Consulta de Ganancias</h4>
+        </div>
+    </div>
+    <div class="card-body">           
+     <button   @onclick="Buscar" class="btn btn-outline-primary" > <i class="oi oi-magnifying-glass"/> Buscar </button>
+     </div>
+
+    <table class="table table-striped table-hover mt-4" style="cursor: pointer;">
+
+        <thead class="thead">
+            <tr class="table">
+                <th>GananciaId</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Ganancias</th> 
+            </tr>
+        </thead>
+         <tbody>
+
+            @foreach (var ganancia in ganancias)
+            {
+                <tr>
+                    <td>@ganancia.GananciaId</td> 
+                    <td>@ganancia.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@ganancia.TotalMonto</td> 
+                    <td>@ganancia.TotalGanancia </td> 
+                    <td><a class="btn btn-sm btn-outline-primary oi oi-eye" href="Ganancia/@ganancia.GananciaId"></a></td> 
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</EditForm>
+
+@code{
+    public List<Ganancia> ganancias { get; set; } = new List<Ganancia>();
+    void Buscar()
+    {
+        ganancias = gananciaBLL.GetList();
+    }
+}

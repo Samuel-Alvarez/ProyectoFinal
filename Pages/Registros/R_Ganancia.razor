@@ -1,0 +1,212 @@
+@page "/Ganancia"
+@page "/Ganancia/{GananciaId:int}"
+@using Models
+@attribute [Authorize]
+@inject GananciaBLL gananciaBLL
+@inject NotificationService notificationService
+
+<EditForm Model="ganancia" OnValidSubmit="Guardar" >
+    <DataAnnotationsValidator/>
+    <div class="card-header">
+            <h3>Registro de Ganancias</h3>
+        </div>
+        <div class="card-body">
+
+            <div class="row justify-content-between">
+
+                <div class="col-3">
+                    <label>GananciaId</label>
+                    <div class="input-group mb-3">
+                        <input type="number" class="form-control" @bind-value="ganancia.GananciaId" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <button class="btn btn-outline-primary" type="button" @onclick="Buscar"> <i class="oi oi-magnifying-glass" /> </button>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <label>Fecha</label>
+                    <input type="date" class="form-control" @bind-value="ganancia.Fecha"  aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+                <label>Monto</label>
+                <InputNumber @bind-Value="detalle.Monto" class="form-control"/>
+                <ValidationMessage For="@(() => detalle.Monto)"/>
+            </div>
+        @*  DETALLE *@
+            <fieldset class="border-success">
+                <div class="card-body">
+                <div class="row">
+                @*Loteria Id *@
+                <div class="col-2">
+                    <label>Loteria</label>
+                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                       <select class="form-select" @bind="detalle.LoteriaId" aria-label=".form-select-lg example">
+                        <option selected>Seleccione</option>
+                        @foreach( var loteria in LoteriaList)
+                        {
+                            <option value="@loteria.LoteriaId"> @loteria.NombreLoteria</option> 
+                        }
+                       </select>
+                </div>
+                </div>
+                @*TipoJugada Id *@
+                <div class="col-2">
+                    <label>TipoJugada</label>
+                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                       <select class="form-select" @bind="detalle.TipoJugadaId" aria-label=".form-select-lg example">
+                        <option selected></option>
+                        @foreach( var tipojugada in TipoJugadaList)
+                        {
+                            <option value="@tipojugada.TipoJugadaId"> @tipojugada.NombreJugada</option> 
+                        }
+                       </select>
+                </div>
+                </div> 
+                @* Ganancias *@
+                <div class="col-2">
+                <label>Ganancia</label>  
+                <input type="number" class="form-control"  @bind-value="detalle.Ganancias" aria-label="Recipient's username" aria-describedby="basic-addon2"> 
+                </div>  
+               @*Boton de agregar detalle*@
+                <div class="col-2">
+                    <button type="button" class="btn btn-outline-primary input-group-text mt-4" @onclick="AgregarDetalle">
+                        <span class="oi oi-plus">Agregar</span>
+                    </button>
+                </div>
+                </div>
+               </div>
+            </fieldset>
+
+
+            @* Tabla de detalles *@
+            <hr />
+            <table class="table table-bordered table-light">
+                <thead class="thead">
+                    <tr class="table">
+                        <th>LoteriaId</th>
+                        <th>Loteria</th>
+                        <th>TipoJugadaId</th> 
+                        <th>TipoJugada</th>
+                        <th>Monto</th>
+                        <th>Ganancia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ganancia.Detalle)
+                    {
+                        <tr>
+                            <td>@item.LoteriaId</td>
+                            <td>@gananciaBLL.GetNombreLoteria(item.LoteriaId)</td>
+                            <td>@item.TipoJugadaId</td>
+                            <td>@gananciaBLL.GetNombreJugada(item.TipoJugadaId)</td>
+                            <td>@item.Monto</td>
+                            <td>@item.Ganancias</td>
+                            <td><span class="btn btn-sm btn-outline-primary oi oi-ban" href="#"
+                            @onclick ="@(() =>RemoverFila(item))"></span></td>
+                            
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+            <hr />
+            
+        <div class="card-footer d-flex justify-content-center">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary" @onclick="Nuevo" > <i class="oi oi-file" /> Nuevo</button>
+                <button type="submit" class="btn btn-outline-success"> <i class="oi oi-document" /> Guardar</button>
+                <button type="button" class="btn btn-outline-danger"  @onclick="Eliminar"><i class="oi oi-trash" /> Eliminar</button>
+            </div>
+        </div>
+</EditForm>
+
+@code{
+    [Parameter]
+    public int GananciaId { get; set; }
+    public Ganancia ganancia { get; set; } = new Ganancia();
+    public GananciasDetalle detalle { get; set; } = new GananciasDetalle();
+    public List<Loteria> LoteriaList { get; set; } = new List<Loteria>();
+    public List<TipoJugada> TipoJugadaList { get; set; } = new List<TipoJugada>();
+
+        protected override void OnInitialized()
+        {
+            LoteriaList = gananciaBLL.LotoList();
+            TipoJugadaList = gananciaBLL.TipoJugadaList();
+
+            ganancia.TotalGanancia=0;
+
+            ganancia.GananciaId = 0;
+            ganancia.Fecha = DateTime.Now;
+
+            if (GananciaId > 0)
+            {
+                ganancia.GananciaId = GananciaId;
+                Buscar();
+            }
+        }
+        void Buscar()
+        {
+           var encontrado = gananciaBLL.Buscar(ganancia.GananciaId);
+            if (encontrado != null)
+            ganancia = encontrado;
+        }
+         void Nuevo()
+        {
+            this.ganancia = new Ganancia();
+        
+        }
+        void Guardar()
+        {
+           if  (gananciaBLL.Guardar(this.ganancia))
+           {
+                ShowNotification(
+                new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Guardado correctamente"
+                });
+                     
+            }
+            else
+            { 
+            }
+        }
+        
+    public void AgregarDetalle()
+    {
+        var loteria = gananciaBLL.Buscar(detalle.LoteriaId);
+        var tipoJ = gananciaBLL.Buscar(detalle.TipoJugadaId);
+        this.ganancia.Detalle.Add(this.detalle);
+        this.detalle = new GananciasDetalle();
+        ganancia.TotalGanancia = ganancia.Detalle.Sum(det => det.Ganancias);
+        ganancia.TotalMonto = ganancia.Detalle.Sum(det => det.Monto);
+    }
+   
+    void Eliminar()
+    {
+        if(gananciaBLL.Eliminar(this.ganancia))
+        {
+            ShowNotification(
+            new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "Elimino correctamente"
+            });
+        }
+        else
+        {
+            
+        }
+    }
+
+    void RemoverFila(GananciasDetalle item)
+    {
+        ganancia.Detalle.Remove(item);
+    }
+    void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+
+    }
+}
