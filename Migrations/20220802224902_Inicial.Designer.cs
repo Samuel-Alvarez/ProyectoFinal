@@ -11,7 +11,7 @@ using MyLottoRewards.Data;
 namespace MyLottoRewards.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20220802160627_Inicial")]
+    [Migration("20220802224902_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

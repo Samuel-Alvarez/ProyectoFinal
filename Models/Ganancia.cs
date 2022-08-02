@@ -7,9 +7,9 @@ namespace MyLottoRewards.Models
     {
         [Key]
         public int GananciaId { get; set; }
-        public int Monto { get; set; }  
+        public int Monto { get; set; }
         public string? NombreLoteria { get; set; }
-        public string? TipoJugada { get; set; }
+        public string? TipoJugada { get; set; } 
         public double TotalGanancia { get; set; }
         public double TotalMonto { get; set; }
         public DateTime Fecha { get; set; }
@@ -17,5 +17,10 @@ namespace MyLottoRewards.Models
 
         [ForeignKey("GananciaId")]
         public List<GananciasDetalle> Detalle { get; set; } = new List<GananciasDetalle>();
+
+        public Ganancia()
+        {
+            Fecha= DateTime.Today;
+        }
     }
 }
