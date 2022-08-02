@@ -25,6 +25,15 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
+builder.Services.AddAuthentication()
+.AddGoogle("google", o => 
+{
+    var googleAuth = builder.Configuration.GetSection("Authentication:Google");
+    o.ClientId = googleAuth["ClientId"];
+    o.ClientSecret = googleAuth["ClientSecret"];
+    o.SignInScheme = IdentityConstants.ExternalScheme;
+});
+    
 
 var app = builder.Build();
 

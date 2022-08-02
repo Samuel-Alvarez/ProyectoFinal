@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "MyLottoRewards/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.Google": "6.0.7",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "6.0.6",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.6",
           "Microsoft.AspNetCore.Identity.UI": "6.0.6",
@@ -28,6 +29,14 @@
         }
       },
       "LibSassBuilder/2.0.1": {},
+      "Microsoft.AspNetCore.Authentication.Google/6.0.7": {
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "assemblyVersion": "6.0.7.0",
+            "fileVersion": "6.0.722.32205"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Authorization/5.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Metadata": "5.0.0",
@@ -491,6 +500,13 @@
       "sha512": "sha512-f+7TWQtCirW94VdzKL9SaAfeSF96TeEqdtDztmTGbndrcUlZZlL6uJLZKQCXQgj1BB3OqX0584OCvqFHrkAusA==",
       "path": "libsassbuilder/2.0.1",
       "hashPath": "libsassbuilder.2.0.1.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Google/6.0.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JMmRAvF7EWVTJuREutLIiXZZdnQsu0iMLXr+pN95TxEIcwmLq11EEJ57QzG/5qq77Whc4MWwhXvmg5RC0v5/Zg==",
+      "path": "microsoft.aspnetcore.authentication.google/6.0.7",
+      "hashPath": "microsoft.aspnetcore.authentication.google.6.0.7.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authorization/5.0.0": {
       "type": "package",

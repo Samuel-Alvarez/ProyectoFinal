@@ -64,3 +64,4 @@ C:\Users\Samuel A. Álvarez\Desktop\Prog Aplicada1\Registros\ProyectoMyLotto\MyL
 C:\Users\Samuel A. Álvarez\Desktop\Prog Aplicada1\Registros\ProyectoMyLotto\MyLottoRewards\obj\Debug\net6.0\MyLottoRewards.pdb
 C:\Users\Samuel A. Álvarez\Desktop\Prog Aplicada1\Registros\ProyectoMyLotto\MyLottoRewards\obj\Debug\net6.0\MyLottoRewards.genruntimeconfig.cache
 C:\Users\Samuel A. Álvarez\Desktop\Prog Aplicada1\Registros\ProyectoMyLotto\MyLottoRewards\obj\Debug\net6.0\ref\MyLottoRewards.dll
+C:\Users\Samuel A. Álvarez\Desktop\Prog Aplicada1\Registros\ProyectoMyLotto\MyLottoRewards\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.Google.dll

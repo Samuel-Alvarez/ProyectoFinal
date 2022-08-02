@@ -1,5 +1,6 @@
 @page "/Ganancias"
 @using Models
+@using Utilities
 @attribute [Authorize]
 @inject GananciaBLL gananciaBLL
 
@@ -10,8 +11,43 @@
             <h4>Consulta de Ganancias</h4>
         </div>
     </div>
-    <div class="card-body">           
-     <button   @onclick="Buscar" class="btn btn-outline-primary" > <i class="oi oi-magnifying-glass"/> Buscar </button>
+    <div class="card-body"> 
+        <form>
+            <div class="input-group d-flex align-items-end">
+
+                @* Filtro *@
+                <div class="input-group" style="margin-right: 30px; width: 16rem;">
+                    <span class="input-group-text">Filtro</span>
+                    <InputSelect class="form-select text-14 col-3" @bind-Value="Filtro">
+                        <option value="0" selected>ID</option>
+                        
+                    </InputSelect>
+                </div>
+
+                @* Fecha Desde *@
+                <div class="input-group" style=" margin-right: 10px; width: 15rem;">
+                    <span class="input-group-text">Desde</span>
+                    <InputDate @bind-Value="FechaDesde" class="form-control col-4" />
+                </div>
+
+                @* Fecha Hasta*@
+                <div class="input-group" style=" width: 15rem;">
+                    <span class="input-group-text">Hasta</span>
+                    <InputDate @bind-Value="FechaHasta" class="form-control col-4" />
+                </div>
+                 @* TextBox Busqueda *@
+                <div class="flex-fill mx-2">
+                    <div class="input-group">
+                        <span class="input-group-text">Busqueda</span>
+                        <InputText class="form-control" @bind-Value="Criterio" />
+                    </div>
+                </div>
+                @* Boton Busqueda *@
+                <button type="button"  style="z-index:0;" class="btn btn-primary" @onclick="Buscar">
+                <i class="oi oi-magnifying-glass mr-2" /> Buscar
+                </button>
+            </div>
+        </form>          
      </div>
 
     <table class="table table-striped table-hover mt-4" style="cursor: pointer;">
@@ -42,9 +78,34 @@
 </EditForm>
 
 @code{
+    public string? Filtro { get; set; }
+    public string? Criterio { get; set; }
+    private DateTime FechaDesde { get; set; } = new DateTime();
+    private DateTime FechaHasta { get; set; } = DateTime.Today.AddDays(1);
     public List<Ganancia> ganancias { get; set; } = new List<Ganancia>();
-    void Buscar()
+    
+    protected override void OnInitialized()
     {
-        ganancias = gananciaBLL.GetList();
+        Filtro = "0";
+        ganancias = gananciaBLL.GetList(t => true);
+    }
+
+    private void Buscar()
+    {
+        ganancias = new List<Ganancia>();
+        if (Criterio != null)
+        {
+            switch (Filtro)
+            {
+                case "0":
+                    int ID = Utilities.ToIntConsulta(Criterio); 
+                    if (ID == -1)
+                        ganancias = gananciaBLL.GetList(t => t.Fecha >= FechaDesde && t.Fecha <= FechaHasta);
+                    else
+                        ganancias = gananciaBLL.GetList(t => (t.GananciaId == ID && t.Fecha >= FechaDesde && t.Fecha <=
+                        FechaHasta));
+                break;
+            }
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MyLottoRewards.Data;
 using MyLottoRewards.Models;
@@ -101,4 +102,22 @@ public class TicketBLL
         {
             return _contexto.TipoJugada.AsNoTracking().ToList();
         }
+        public List<Ticket> GetList(Expression<Func<Ticket, bool>>criterio)
+        {
+            List<Ticket> lista = new List<Ticket>();
+
+            try
+            {
+                lista=_contexto.Ticket
+                .Include(t =>t.Detalle)
+                .Where(criterio).AsNoTracking()
+                .ToList();
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        return lista;
+    }
 }
+

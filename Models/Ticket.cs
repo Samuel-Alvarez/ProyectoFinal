@@ -17,6 +17,11 @@ namespace MyLottoRewards.Models
         [ForeignKey("TicketId")]
         public List<TicketsDetalle> Detalle { get; set; } = new List<TicketsDetalle>();
 
+        public Ticket()
+        {
+            Fecha= DateTime.Today;
+        }
+
     }
 
 }
